@@ -1,0 +1,19 @@
+{
+  "name": "@satellite-earth/publication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@satellite-earth/media": "^1.0.0",
+    "@satellite-earth/signal": "^1.0.0",
+    "sanitize-filename": "1.6.3"
+  },
+  "author": {
+    "name": "Stuart Bowman",
+    "email": "sbowman@satellite.earth"
+  },
+  "license": "ISC"
+}
