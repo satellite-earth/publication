@@ -1,5 +1,5 @@
-const Media = require('@satellite-earth/dev-media');
-const Signal = require('@satellite-earth/dev-signal');
+const Media = require('@satellite-earth/media');
+const Signal = require('@satellite-earth/signal');
 const sanitize = require('sanitize-filename');
 
 class Publication extends Signal {
