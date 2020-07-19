@@ -104,7 +104,6 @@ class Publication extends Signal {
 			}
 			
 			// Generate markdown segment and append
-			//const seg = f(e.type === 'media' ? e : e.value);
 			markdown += `\n${f(e.data)}\n`;
 		}
 
