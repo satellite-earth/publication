@@ -1,14 +1,14 @@
 {
   "name": "@satellite-earth/publication",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@satellite-earth/media": "^1.0.0",
-    "@satellite-earth/signal": "^1.0.0",
+    "@satellite-earth/media": "^2.0.0",
+    "@satellite-earth/signal": "^2.0.0",
     "sanitize-filename": "1.6.3"
   },
   "author": {

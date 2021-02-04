@@ -2,6 +2,7 @@ const Media = require('@satellite-earth/media');
 const Signal = require('@satellite-earth/signal');
 const sanitize = require('sanitize-filename');
 
+
 class Publication extends Signal {
 
 	constructor (payload, signalParams) {
@@ -70,10 +71,10 @@ class Publication extends Signal {
 		}
 
 		const transform = {
+			quote: (value) => { return value ? `> ${value.split('\n').join('\n> ')}` : ''; },
 			code: (value) => { return value ? `\`\`\`\n${value}\n\`\`\`` : ''; },
 			hsmall: (value) => { return value ? `#### ${value}` : ''; },
 			hlarge: (value) => { return value ? `### ${value}` : ''; },
-			quote: (value) => { return value ? `> ${value}` : ''; },
 			text: (value) => { return `${value}`; },
 			break: () => { return '* * *'; },
 			media: (info) => {
@@ -97,6 +98,7 @@ class Publication extends Signal {
 		};
 
 		for (let e of elements) { // Iterate over pub elements
+
 			const f = transform[e.type]; // Get transform function
 
 			if (!f) { // Make sure media type is supported
@@ -104,7 +106,7 @@ class Publication extends Signal {
 			}
 			
 			// Generate markdown segment and append
-			markdown += `\n${f(e.data)}\n`;
+			markdown += `\n${f(e.type === 'media' || e.type === 'break' ? e.data : e.data.trim())}\n`;
 		}
 
 		if (media.length > 0) { // Concat media fileNames
@@ -120,22 +122,34 @@ class Publication extends Signal {
 		// Convert data to markdown string and save
 		this.markdown = data.toString('utf8');
 
-		// Heuristically identify and extract elements
+		// Identify and extract elements from markdown
 		this.elements = [];
 		const segments = this.markdown.split(`\`\`\``);
+
 		for (let i = 0; i < segments.length; i++) {
+
 			if (i % 2 === 0) {
-				this.elements = this.elements.concat(segments[i].split('\n\n').map((element) => {
+
+				this.elements = this.elements.concat(segments[i].split('\n\n').map(element => {
 
 					const md = element.trim('\n');
+
 					if (md.substring(0, 5) === '#### ') { // Small header
+
 						return { type: 'hsmall', markdown: md };
+
 					} else if (md.substring(0, 4) === '### ') { // Large header
+
 						return { type: 'hlarge', markdown: md };
+
 					} else if (md.substring(0, 2) === '> ') { // Blockquote
+
 						return { type: 'quote', markdown: md };
+
 					} else if (md === '* * *') { // Break
+
 						return { type: 'break', markdown: md };
+
 					} else if (md.indexOf('_signed_meta') !== -1) { // Media torrent
 
 						let uri;
@@ -161,9 +175,15 @@ class Publication extends Signal {
 						return { type: 'media', markdown: md, data };
 
 					} else { // Text type
+
 						return { type: 'text', markdown: md };
 					}
+
+				}).filter(element => {
+
+					return typeof element !== 'undefined';
 				}));
+
 			} else {
 				this.elements.push({ type: 'code', markdown: segments[i] });
 			}
